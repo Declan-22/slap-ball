@@ -1,0 +1,169 @@
+[gd_scene format=3 uid="uid://dmd5ng60uls5x"]
+
+[ext_resource type="Script" uid="uid://bdf6x8t8ikwil" path="res://scripts/test_launcher.gd" id="1_ghdma"]
+[ext_resource type="Shader" uid="uid://dco56r36kjib2" path="res://scenes/net_lab.gdshader" id="1_yo0f8"]
+[ext_resource type="Shader" uid="uid://dl5krw3t0b7sy" path="res://scenes/net_fabric.gdshader" id="2_kc806"]
+[ext_resource type="Shader" uid="uid://5411heqp51m5" path="res://scenes/outline.gdshader" id="3_outline"]
+[ext_resource type="Script" uid="uid://bgoq8h314j1ar" path="res://scripts/net.gd" id="3_wpprh"]
+[ext_resource type="Script" uid="uid://dst2ci6advt0c" path="res://scripts/ball.gd" id="5_dqx6v"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yo0f8"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wtssp"]
+size = Vector2(20, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_66nbg"]
+render_priority = 0
+shader = ExtResource("1_yo0f8")
+shader_parameter/col_a = Color(0.6, 0.6, 0.62, 1)
+shader_parameter/col_b = Color(0.53, 0.53, 0.55, 1)
+shader_parameter/squares = 20.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_outline"]
+render_priority = 0
+shader = ExtResource("3_outline")
+shader_parameter/thickness = 0.015
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_black"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yellow"]
+albedo_color = Color(0.96, 0.75, 0.03, 1)
+roughness = 0.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iepnk"]
+render_priority = 0
+shader = ExtResource("2_kc806")
+shader_parameter/net_color = Color(0.02, 0.02, 0.02, 1)
+shader_parameter/radius = 0.7
+shader_parameter/plane_size = 1.5
+shader_parameter/sag = 0.06
+shader_parameter/cells = 45.0
+shader_parameter/strand_width = 0.14
+shader_parameter/impact_pos = Vector2(99, 99)
+shader_parameter/impact_dent = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4d4r3"]
+size = Vector2(1.5, 1.5)
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_outline_thin"]
+render_priority = 0
+shader = ExtResource("3_outline")
+shader_parameter/thickness = 0.008
+
+[sub_resource type="SphereMesh" id="SphereMesh_j2r7v"]
+radius = 0.11
+height = 0.22
+radial_segments = 32
+rings = 16
+
+[sub_resource type="Environment" id="Environment_sy5f2"]
+background_mode = 1
+background_color = Color(0.35, 0.42, 0.55, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.65, 0.7, 0.75, 1)
+ambient_light_energy = 0.7
+
+[node name="NetLab" type="Node3D" unique_id=1365933484]
+script = ExtResource("1_ghdma")
+
+[node name="GroundBody" type="StaticBody3D" parent="." unique_id=1229785843]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GroundBody" unique_id=1155046129]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_yo0f8")
+
+[node name="Baseplate" type="MeshInstance3D" parent="GroundBody" unique_id=2110586820]
+mesh = SubResource("PlaneMesh_wtssp")
+surface_material_override/0 = SubResource("ShaderMaterial_66nbg")
+
+[node name="Net" type="Node3D" parent="." unique_id=634505158]
+script = ExtResource("3_wpprh")
+
+[node name="Rim" type="CSGTorus3D" parent="Net" unique_id=427283564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+material_overlay = SubResource("ShaderMaterial_outline")
+inner_radius = 0.645
+outer_radius = 0.705
+sides = 24
+ring_sides = 64
+material = SubResource("StandardMaterial3D_black")
+
+[node name="Leg1" type="CSGBox3D" parent="Net" unique_id=340945638]
+transform = Transform3D(0.30901697, 0, 0.95105654, 0, 1, 0, -0.95105654, 0, 0.30901697, 0.642, 0.16, 0.209)
+material_overlay = SubResource("ShaderMaterial_outline")
+size = Vector3(0.1, 0.34, 0.055)
+material = SubResource("StandardMaterial3D_yellow")
+
+[node name="Leg2" type="CSGBox3D" parent="Net" unique_id=381723424]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0.675)
+material_overlay = SubResource("ShaderMaterial_outline")
+size = Vector3(0.1, 0.34, 0.055)
+material = SubResource("StandardMaterial3D_yellow")
+
+[node name="Leg3" type="CSGBox3D" parent="Net" unique_id=1557689617]
+transform = Transform3D(0.30901697, 0, -0.95105654, 0, 1, 0, 0.95105654, 0, 0.30901697, -0.642, 0.16, 0.209)
+material_overlay = SubResource("ShaderMaterial_outline")
+size = Vector3(0.1, 0.34, 0.055)
+material = SubResource("StandardMaterial3D_yellow")
+
+[node name="Leg4" type="CSGBox3D" parent="Net" unique_id=1117346126]
+transform = Transform3D(-0.80901706, 0, -0.5877852, 0, 1, 0, 0.5877852, 0, -0.80901706, -0.397, 0.16, -0.546)
+material_overlay = SubResource("ShaderMaterial_outline")
+size = Vector3(0.1, 0.34, 0.055)
+material = SubResource("StandardMaterial3D_yellow")
+
+[node name="Leg5" type="CSGBox3D" parent="Net" unique_id=498315052]
+transform = Transform3D(-0.80901706, 0, 0.5877852, 0, 1, 0, -0.5877852, 0, -0.80901706, 0.397, 0.16, -0.546)
+material_overlay = SubResource("ShaderMaterial_outline")
+size = Vector3(0.1, 0.34, 0.055)
+material = SubResource("StandardMaterial3D_yellow")
+
+[node name="NetMesh" type="MeshInstance3D" parent="Net" unique_id=1379496881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, 0)
+material_override = SubResource("ShaderMaterial_iepnk")
+mesh = SubResource("PlaneMesh_4d4r3")
+
+[node name="Ball" type="Node3D" parent="." unique_id=789739632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 2)
+script = ExtResource("5_dqx6v")
+
+[node name="Mesh" type="MeshInstance3D" parent="Ball" unique_id=1245604005]
+material_overlay = SubResource("ShaderMaterial_outline_thin")
+mesh = SubResource("SphereMesh_j2r7v")
+surface_material_override/0 = SubResource("StandardMaterial3D_yellow")
+
+[node name="MainCam" type="Camera3D" parent="." unique_id=1364387696]
+transform = Transform3D(-0.5418801, -0.4037868, 0.73710394, 0.019460546, 0.87076557, 0.49131322, -0.8402305, 0.28057727, -0.46399257, 2.3580744, 1.651869, -1.5179082)
+current = true
+fov = 45.197407
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=898989805]
+transform = Transform3D(0.8660254, 0.38302222, -0.32139382, 0, 0.64278764, 0.76604444, 0.5, -0.66341394, 0.5566704, 0, 0, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1112791728]
+
+[node name="Readout" type="Label" parent="UI" unique_id=2056675767]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 1200.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 20
+text = "NetLab ready."
+
+[node name="Help" type="Label" parent="UI" unique_id=565601683]
+offset_left = 16.0
+offset_top = 52.0
+offset_right = 1200.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 16
+text = "1 steep   2 flat   3 pocket   R reset   Space repeat"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1221464536]
+environment = SubResource("Environment_sy5f2")
